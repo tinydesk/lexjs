@@ -1,0 +1,19 @@
+{
+  "name": "lexjs",
+  "version": "0.1.0",
+  "description": "A lexer generator for different targets written in javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lexer",
+    "compiler",
+    "interpreter"
+  ],
+  "author": "Hannes Widmoser",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.16.4"
+  }
+}
