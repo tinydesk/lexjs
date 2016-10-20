@@ -9,7 +9,6 @@ _.range(0, 127).forEach(d => characterClasses[d] = d);
 
 const r = new RegexBuilder(characterClasses);
 
-//const regex = r.map([ r.atLeastOne(['0123456789']), r.or(['a', 'b'], 'c') ]);
 const num = r.atLeastOne(['0123456789']);
 const space = r.atLeastOne([' ']);
 

@@ -48,7 +48,7 @@ class Tokenizer {
           return this.emitToken();
         } else {
           // error: unexpected character:
-          throw Error(`Unexpected character ${this.input[this.pos]}`);
+          throw Error(`Unexpected character '${this.input[this.pos]}'`);
         }
       } else if (this.isAccepting()) {
         if (this.lastAcceptedState && this.state !== this.lastAcceptedState) {
@@ -63,21 +63,9 @@ class Tokenizer {
     if (this.isAccepting()) {
       return this.emitToken();
     } else {
-      return undefined;
+      throw Error(`Unexpected character '${this.input[this.start]}'`);
     }
   }
 }
-
-// const accepts = (dfa, characterClasses, str) => {
-//   // const state = _.reduce(str, (state, c, i) => {
-//   //   const a = characterClasses[str.codePointAt(i)];
-//   //   const nextState = dfa.states[state][a];
-//   //   if (nextState === undefined) {
-//   //     throw Error('Unexpected character: ' + c);
-//   //   }
-//   //   return nextState;
-//   // }, 0);
-//   // return dfa.acceptingStates.includes(state);
-// }
 
 module.exports = Tokenizer;
