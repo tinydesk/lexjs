@@ -1,33 +1,25 @@
-const _ = require('lodash');
-const fromRegex = require('./src/nfa');
-const dfa = require('./src/dfa');
-const Tokenizer = require('./src/engine');
-const RegexBuilder = require('./src/regex');
+const fs = require('fs');
+const argv = require('minimist')(process.argv.slice(2));
 
-const characterClasses = new Array(256).fill(-1);
-_.range(0, 127).forEach(d => characterClasses[d] = d);
+const engine = require('./src/engine');
+const Table = require('./lexjs/table');
 
-const r = new RegexBuilder(characterClasses);
+const table = Table.fromFile(argv.t);
 
-const num = r.atLeastOne(['0123456789']);
-const space = r.atLeastOne([' ']);
-
-const nfa = fromRegex([
-  {
-    label: 'number',
-    regex: num
-  },
-  {
-    label: 'space',
-    regex: space
-  }
-]);
-
-const d = dfa.dfa(nfa, 128);
-
-const tokenizer = new Tokenizer(d, characterClasses, process.argv[2]);
+console.time('tokenize');
+const t = process.hrtime();
+const contents = fs.readFileSync(argv._[0]).toString();
+const input = new engine.StringInput(contents);
+const tokenizer = new engine.Tokenizer(table, input);
 let token = tokenizer.next();
+let c = 0;
 while (token) {
-  console.log(token);
+  if (token.type === 0) {
+    c++;
+  }
   token = tokenizer.next();
 }
+const diff = process.hrtime(t);
+const microseconds = diff[0]*1000000 + diff[1]*0.001;
+console.timeEnd('tokenize');
+console.log(c, `${(contents.length / microseconds).toFixed(1)} MC/second` );
