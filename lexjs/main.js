@@ -6,9 +6,6 @@ const nfa = require('./nfa');
 const dfa = require('./dfa');
 
 const rules = require(path.resolve(process.cwd(), argv._[0]));
-
-const d = dfa(nfa(rules.tokens), 256);
-
-const table = new Table(rules.characterClasses, d.states, d.acceptingStates);
+const table = Table.fromDFA(rules.characterClasses, dfa(nfa(rules.tokens), 256));
 table.writeFile(argv.o);
 
