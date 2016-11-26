@@ -26,7 +26,7 @@ const regexHandlers = {
     ];
   },
   star: node => {
-    const nfa = connect(offset(node.child, 1), 0);
+    const nfa = connect(offset(fromRegex(node.child), 1), 0);
     return [
       [[null, ''], [1, '']],
       ...nfa

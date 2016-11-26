@@ -6,6 +6,14 @@ class RegexBuilder {
     this.characterClasses = characterClasses;
   }
 
+  toCharacter(c) {
+    if (_.isString(c)) {
+      return this.characterClasses[c.codePointAt(0)];
+    } else {
+      return c;
+    }
+  }
+
   map(regex) {
     if (_.isString(regex)) {
       if (regex.length === 1) {
@@ -33,6 +41,11 @@ class RegexBuilder {
           children: regex.map(e => this.map(e))
         };
       }
+    } else if (_.isNumber(regex)) {
+      return {
+        type: 'character',
+        character: regex
+      };
     } else {
       return regex;
     }
@@ -57,6 +70,36 @@ class RegexBuilder {
       type: 'star',
       child: this.map(child)
     };
+  }
+
+  toClasses(characters) {
+    return _.flatMap(characters, c => {
+      if (_.isString(c)) {
+        return _.map(c, (a, i) => this.characterClasses[c.codePointAt(i)]);
+      } else if (_.isArray(c)) {
+        return _.range(this.toCharacter(c[0]), this.toCharacter(c[1]));
+      }
+    });
+  }
+
+  characterClass(...characters) {
+    return {
+      type: 'characterClass',
+      characters: this.toClasses(characters)
+    };
+  }
+
+  characterClassNot(...characters) {
+    const result = this.allCharacters();
+    _.pullAll(result, this.toClasses(characters));
+    return {
+      type: 'characterClass',
+      characters: result
+    };
+  }
+
+  allCharacters() {
+    return _.range(0, 255);
   }
 
 }

@@ -1,12 +1,12 @@
 const _ = require('lodash');
 const RegexBuilder = require('../../lexjs/regex');
+const CharacterClassBuilder = require('../../lexjs/characters');
 
-const characterClasses = new Array(256*256).fill(0);
-_.range(0, 127).forEach(d => characterClasses[d] = d + 1);
-const r = new RegexBuilder(characterClasses);
+const c = new CharacterClassBuilder();
+const r = new RegexBuilder(c.characterClasses);
 
 module.exports = {
-  characterClasses: characterClasses,
+  characterClasses: c.characterClasses,
   tokens: [
     {
       label: 'number',
